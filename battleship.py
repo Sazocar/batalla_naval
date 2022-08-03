@@ -30,10 +30,15 @@ class Frame:
                                 relwidth=1,
                                 relheight=1)
 
-        self.etiqueta = Label(
-            master, text="Matriz de Barcos Jugador A", font=("Arial", 20))
-        self.etiqueta.config(bg="white")
-        self.etiqueta.place(x=80, y=135)
+        self.matrizBarcosLabel = Label(
+            master, text="Barcos Jugador A", font=("Arial", 20))
+        self.matrizBarcosLabel.config(bg="white")
+        self.matrizBarcosLabel.place(x=80, y=135)
+
+        self.matrizMisilesLabel = Label(
+            master, text="Misiles Jugador A", font=("Arial", 20))
+        self.matrizMisilesLabel.config(bg="white")
+        self.matrizMisilesLabel.place(x=220, y=456)
 
 
         def incMisilesCount():
@@ -60,11 +65,11 @@ class Frame:
 
         def addShipsCoordenates(x, y):
             ships_coors.append({"x": x, "y": y})
-            print(f'Barco posicionado en ({x},{y})')
+            print(f'BARCO posicionado en ({x},{y})')
 
         def addMisilesCoordenates(x, y):
             misiles_coors.append({"x": x, "y": y})
-            print(f'Misil posicionado en ({x},{y})')
+            print(f'MISIL posicionado en ({x},{y})')
 
 
         def disableButton(boton):
@@ -76,9 +81,9 @@ class Frame:
                 disableButton(boton)
                 addShipsCoordenates(x, y)
                 incShipCount()
-                print(f'Cantidad de barcos restantes {10-ships_count}')
+                print(f'Cantidad de BARCOS  restantes {10-ships_count}\n')
             else:
-                print('Error, no se puede agregar mas barcos.')
+                print('Error, no se puede agregar mas BARCOS.\n')
 
 
         def saveMisiles(boton, x, y):
@@ -86,9 +91,11 @@ class Frame:
                   disableButton(boton)
                   addMisilesCoordenates(x, y)
                   incMisilesCount()
-                  print(f'Cantidad de misiles restantes {10-misiles_count}')
+                  print(f'Cantidad de MISILES restantes {10-misiles_count}\n')
             else:
-                print('Error, no se puede agregar mas misiles.')
+                print('Error, no se puede agregar mas MISILES.\n')
+
+      # Matriz de barcos
 
         make_labels()
 
@@ -161,7 +168,7 @@ class Frame:
         self.C10.grid(row=3, column=10)
 
 
-        # Fila C
+        # Fila D
 
         self.D1 = Button(master, text="(1,4)", command=lambda: saveShip(self.D1, 1, 4))
         self.D1.grid(row=4, column=1)
@@ -185,26 +192,159 @@ class Frame:
         self.D10.grid(row=4, column=10)
 
 
+        # Matriz de misiles
+
+        # Primera Fila
+
         self.E1 = Button(master, text="(1,1)", command=lambda: saveMisiles(self.E1, 1, 1))
         self.E1.place(x=160, y=350)
-        self.E2 = Button(master, text="(1,2)", command=lambda: saveMisiles(self.E2, 1, 2))
+        self.E2 = Button(master, text="(2,1)", command=lambda: saveMisiles(self.E2, 2, 1))
         self.E2.place(x=200, y=350)
-        self.E3 = Button(master, text="(1,3)", command=lambda: saveMisiles(self.E3, 1, 3))
+        self.E3 = Button(master, text="(3,1)", command=lambda: saveMisiles(self.E3, 3, 1))
         self.E3.place(x=240, y=350)
-        self.E4 = Button(master, text="(1,4)", command=lambda: saveMisiles(self.E4, 1, 4))
+        self.E4 = Button(master, text="(4,1)", command=lambda: saveMisiles(self.E4, 4, 1))
         self.E4.place(x=280, y=350)
-        self.E5 = Button(master, text="(1,5)", command=lambda: saveMisiles(self.E5, 1, 5))
+        self.E5 = Button(master, text="(5,1)", command=lambda: saveMisiles(self.E5, 5, 1))
         self.E5.place(x=320, y=350)
-        self.E6 = Button(master, text="(1,6)", command=lambda: saveMisiles(self.E6, 1, 6))
+        self.E6 = Button(master, text="(6,1)", command=lambda: saveMisiles(self.E6, 6, 1))
         self.E6.place(x=360, y=350)
-        self.E7 = Button(master, text="(1,7)", command=lambda: saveMisiles(self.E7, 1, 7))
+        self.E7 = Button(master, text="(7,1)", command=lambda: saveMisiles(self.E7, 7, 1))
         self.E7.place(x=400, y=350)
-        self.E8 = Button(master, text="(1,8)", command=lambda: saveMisiles(self.E8, 1, 8))
+        self.E8 = Button(master, text="(8,1)", command=lambda: saveMisiles(self.E8, 8, 1))
         self.E8.place(x=440, y=350)
-        self.E9 = Button(master, text="(1,9)", command=lambda: saveMisiles(self.E9, 1, 9))
+        self.E9 = Button(master, text="(9,1)", command=lambda: saveMisiles(self.E9, 9, 1))
         self.E9.place(x=480, y=350)
-        self.E10 = Button(master, text="(1,10)", command=lambda: saveMisiles(self.E10, 1, 10))
+        self.E10 = Button(master, text="(10,1)", command=lambda: saveMisiles(self.E10, 10, 1))
         self.E10.place(x=520, y=350)
+        
+
+        # Segunda Fila
+
+        self.F1 = Button(master, text="(1,2)", command=lambda: saveMisiles(self.F1, 1, 2))
+        self.F1.place(x=160, y=372)
+        self.F2 = Button(master, text="(2,2)", command=lambda: saveMisiles(self.F2, 2, 2))
+        self.F2.place(x=200, y=372)
+        self.F3 = Button(master, text="(3,2)", command=lambda: saveMisiles(self.F3, 3, 2))
+        self.F3.place(x=240, y=372)
+        self.F4 = Button(master, text="(4,2)", command=lambda: saveMisiles(self.F4, 4, 2))
+        self.F4.place(x=280, y=372)
+        self.F5 = Button(master, text="(5,2)", command=lambda: saveMisiles(self.F5, 5, 2))
+        self.F5.place(x=320, y=372)
+        self.F6 = Button(master, text="(6,2)", command=lambda: saveMisiles(self.F6, 6, 2))
+        self.F6.place(x=360, y=372)
+        self.F7 = Button(master, text="(7,2)", command=lambda: saveMisiles(self.F7, 7, 2))
+        self.F7.place(x=400, y=372)
+        self.F8 = Button(master, text="(8,2)", command=lambda: saveMisiles(self.F8, 8, 2))
+        self.F8.place(x=440, y=372)
+        self.F9 = Button(master, text="(9,2)", command=lambda: saveMisiles(self.F9, 9, 2))
+        self.F9.place(x=480, y=372)
+        self.F10 = Button(master, text="(10,2)", command=lambda: saveMisiles(self.F10, 10, 2))
+        self.F10.place(x=520, y=372)
+        
+        # Tercera Fila
+
+        self.G1 = Button(master, text="(1,3)", command=lambda: saveMisiles(self.G1, 1, 3))
+        self.G1.place(x=160, y=394)
+        self.G2 = Button(master, text="(2,3)", command=lambda: saveMisiles(self.G2, 2, 3))
+        self.G2.place(x=200, y=394)
+        self.G3 = Button(master, text="(3,3)", command=lambda: saveMisiles(self.G3, 3, 3))
+        self.G3.place(x=240, y=394)
+        self.G4 = Button(master, text="(4,3)", command=lambda: saveMisiles(self.G4, 4, 3))
+        self.G4.place(x=280, y=394)
+        self.G5 = Button(master, text="(5,3)", command=lambda: saveMisiles(self.G5, 5, 3))
+        self.G5.place(x=320, y=394)
+        self.G6 = Button(master, text="(6,3)", command=lambda: saveMisiles(self.G6, 6, 3))
+        self.G6.place(x=360, y=394)
+        self.G7 = Button(master, text="(7,3)", command=lambda: saveMisiles(self.G7, 7, 3))
+        self.G7.place(x=400, y=394)
+        self.G8 = Button(master, text="(8,3)", command=lambda: saveMisiles(self.G8, 8, 3))
+        self.G8.place(x=440, y=394)
+        self.G9 = Button(master, text="(9,3)", command=lambda: saveMisiles(self.G9, 9, 3))
+        self.G9.place(x=480, y=394)
+        self.G10 = Button(master, text="(10,3)", command=lambda: saveMisiles(self.G10, 10, 3))
+        self.G10.place(x=520, y=394)
+
+        # Cuarta Fila
+
+        self.H1 = Button(master, text="(1,4)", command=lambda: saveMisiles(self.H1, 1, 4))
+        self.H1.place(x=160, y=416)
+        self.H2 = Button(master, text="(2,4)", command=lambda: saveMisiles(self.H2, 2, 4))
+        self.H2.place(x=200, y=416)
+        self.H3 = Button(master, text="(3,4)", command=lambda: saveMisiles(self.H3, 3, 4))
+        self.H3.place(x=240, y=416)
+        self.H4 = Button(master, text="(4,4)", command=lambda: saveMisiles(self.H4, 4, 4))
+        self.H4.place(x=280, y=416)
+        self.H5 = Button(master, text="(5,4)", command=lambda: saveMisiles(self.H5, 5, 4))
+        self.H5.place(x=320, y=416)
+        self.H6 = Button(master, text="(6,4)", command=lambda: saveMisiles(self.H6, 6, 4))
+        self.H6.place(x=360, y=416)
+        self.H7 = Button(master, text="(7,4)", command=lambda: saveMisiles(self.H7, 7, 4))
+        self.H7.place(x=400, y=416)
+        self.H8 = Button(master, text="(8,4)", command=lambda: saveMisiles(self.H8, 8, 4))
+        self.H8.place(x=440, y=416)
+        self.H9 = Button(master, text="(9,4)", command=lambda: saveMisiles(self.H9, 9, 4))
+        self.H9.place(x=480, y=416)
+        self.H10 = Button(master, text="(10,4)", command=lambda: saveMisiles(self.H10, 10, 4))
+        self.H10.place(x=520, y=416)
+
+        self.UnoLabel = Label(master, text="1",)
+        self.UnoLabel.config(bg="white")
+        self.UnoLabel.place(x=170, y=325)
+        
+        self.DosLabel = Label(master, text="2",)
+        self.DosLabel.config(bg="white")
+        self.DosLabel.place(x=210, y=325)
+              
+          
+        self.TresLabel = Label(master, text="3",)
+        self.TresLabel.config(bg="white")
+        self.TresLabel.place(x=250, y=325)
+              
+        self.CuatroLabel = Label(master, text="4",)
+        self.CuatroLabel.config(bg="white")
+        self.CuatroLabel.place(x=290, y=325)
+
+        self.CincoLabel = Label(master, text="5",)
+        self.CincoLabel.config(bg="white")
+        self.CincoLabel.place(x=330, y=325)
+              
+        self.SeisLabel = Label(master, text="6",)
+        self.SeisLabel.config(bg="white")
+        self.SeisLabel.place(x=370, y=325)
+              
+        self.SieteLabel = Label(master, text="7",)
+        self.SieteLabel.config(bg="white")
+        self.SieteLabel.place(x=410, y=325)
+
+        self.OchoLabel = Label(master, text="8",)
+        self.OchoLabel.config(bg="white")
+        self.OchoLabel.place(x=450, y=325)
+
+        self.NueveLabel = Label(master, text="9",)
+        self.NueveLabel.config(bg="white")
+        self.NueveLabel.place(x=490, y=325)
+              
+        self.DiezLabel = Label(master, text="10",)
+        self.DiezLabel.config(bg="white")
+        self.DiezLabel.place(x=530, y=325)
+
+        self.ALabel = Label(master, text="A",)
+        self.ALabel.config(bg="white")
+        self.ALabel.place(x=140, y=349)
+              
+        self.BLabel = Label(master, text="B",)
+        self.BLabel.config(bg="white")
+        self.BLabel.place(x=140, y=371)
+
+        self.CLabel = Label(master, text="C",)
+        self.CLabel.config(bg="white")
+        self.CLabel.place(x=140, y=395)
+              
+        self.DLabel = Label(master, text="D",)
+        self.DLabel.config(bg="white")
+        self.DLabel.place(x=140, y=417)
+              
+          
         
 
 
@@ -212,15 +352,3 @@ class Frame:
 root = Tk()
 MainFrame = Frame(root)
 root.mainloop()
-
-# #Button 1: not clickable
-# btn1 = Button(root, text="Button 1", command= lambda: disableButton(btn1))
-# btn1.pack(side=LEFT)
-
-# #Button 2 : clickable
-# btn = Button(root, text="Hola", command= lambda: disableButton(btn))
-# btn.pack(side=RIGHT)
-
-# # print(btn.configure().keys())
-
-# root.mainloop()
