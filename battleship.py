@@ -4,6 +4,8 @@ from PIL import ImageTk, Image, ImageOps
 ships_coors = []
 ships_count = 0
 
+misiles_coors = []
+misiles_count = 0
 
 class Frame:
     def __init__(self, master): 
@@ -31,14 +33,16 @@ class Frame:
         self.etiqueta = Label(
             master, text="Matriz de Barcos Jugador A", font=("Arial", 20))
         self.etiqueta.config(bg="white")
-        self.etiqueta.place(x=80, y=165)
+        self.etiqueta.place(x=80, y=135)
 
-        # frame2.pack()
 
+        def incMisilesCount():
+            global misiles_count
+            misiles_count += 1
 
         def incShipCount():
             global ships_count
-            ships_count = ships_count + 1
+            ships_count += 1
 
 
         def make_labels():
@@ -54,9 +58,13 @@ class Frame:
                         text=str(x)).grid(row=0, column=x)
 
 
-        def addCoordenate(x, y):
+        def addShipsCoordenates(x, y):
             ships_coors.append({"x": x, "y": y})
-            print(ships_coors)
+            print(f'Barco posicionado en ({x},{y})')
+
+        def addMisilesCoordenates(x, y):
+            misiles_coors.append({"x": x, "y": y})
+            print(f'Misil posicionado en ({x},{y})')
 
 
         def disableButton(boton):
@@ -66,12 +74,21 @@ class Frame:
         def saveShip(boton, x, y):
             if (ships_count < 10): 
                 disableButton(boton)
-                addCoordenate(x, y)
+                addShipsCoordenates(x, y)
                 incShipCount()
-                print(ships_count)
+                print(f'Cantidad de barcos restantes {10-ships_count}')
             else:
                 print('Error, no se puede agregar mas barcos.')
 
+
+        def saveMisiles(boton, x, y):
+            if (misiles_count < 10):
+                  disableButton(boton)
+                  addMisilesCoordenates(x, y)
+                  incMisilesCount()
+                  print(f'Cantidad de misiles restantes {10-misiles_count}')
+            else:
+                print('Error, no se puede agregar mas misiles.')
 
         make_labels()
 
@@ -168,10 +185,26 @@ class Frame:
         self.D10.grid(row=4, column=10)
 
 
-        self.E1 = Button(master, text="(1,1)", command=lambda: saveShip(self.E1, 1, 1))
+        self.E1 = Button(master, text="(1,1)", command=lambda: saveMisiles(self.E1, 1, 1))
         self.E1.place(x=160, y=350)
-        self.E2 = Button(master, text="(1,2)", command=lambda: saveShip(self.E2, 1, 1))
+        self.E2 = Button(master, text="(1,2)", command=lambda: saveMisiles(self.E2, 1, 2))
         self.E2.place(x=200, y=350)
+        self.E3 = Button(master, text="(1,3)", command=lambda: saveMisiles(self.E3, 1, 3))
+        self.E3.place(x=240, y=350)
+        self.E4 = Button(master, text="(1,4)", command=lambda: saveMisiles(self.E4, 1, 4))
+        self.E4.place(x=280, y=350)
+        self.E5 = Button(master, text="(1,5)", command=lambda: saveMisiles(self.E5, 1, 5))
+        self.E5.place(x=320, y=350)
+        self.E6 = Button(master, text="(1,6)", command=lambda: saveMisiles(self.E6, 1, 6))
+        self.E6.place(x=360, y=350)
+        self.E7 = Button(master, text="(1,7)", command=lambda: saveMisiles(self.E7, 1, 7))
+        self.E7.place(x=400, y=350)
+        self.E8 = Button(master, text="(1,8)", command=lambda: saveMisiles(self.E8, 1, 8))
+        self.E8.place(x=440, y=350)
+        self.E9 = Button(master, text="(1,9)", command=lambda: saveMisiles(self.E9, 1, 9))
+        self.E9.place(x=480, y=350)
+        self.E10 = Button(master, text="(1,10)", command=lambda: saveMisiles(self.E10, 1, 10))
+        self.E10.place(x=520, y=350)
         
 
 
