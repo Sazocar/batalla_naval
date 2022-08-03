@@ -95,6 +95,25 @@ class Frame:
             else:
                 print('Error, no se puede agregar mas MISILES.\n')
 
+
+        def showShipsAndMisiles():
+            if (len(ships_coors) <= 0):
+                print('\n')
+                print('No hay barcos en posicion\n')
+            else:
+              print('BARCOS\n')
+              for ship in ships_coors:
+                  print(f' ({ship["x"]},{ship["y"]})')
+            if (len(misiles_coors) <= 0):
+                print('\n')
+                print('No hay misiles en posicion\n')
+            else:
+              print('\n')
+              print('MISILES\n')
+              for misil in misiles_coors:
+                  print(f' ({misil["x"]},{misil["y"]})')
+
+
       # Matriz de barcos
 
         make_labels()
@@ -343,6 +362,10 @@ class Frame:
         self.DLabel = Label(master, text="D",)
         self.DLabel.config(bg="white")
         self.DLabel.place(x=140, y=417)
+
+
+        self.PlayButton = Button(master, text="JUGAR", font=("Arial", 20), command=lambda: showShipsAndMisiles())
+        self.PlayButton.place(x=800, y=116)
               
           
         
