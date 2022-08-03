@@ -1,11 +1,21 @@
+import customtkinter
 from tkinter import *
 from PIL import ImageTk, Image, ImageOps
+
+customtkinter.set_appearance_mode("System")  # Modes: system (default), light, dark
+customtkinter.set_default_color_theme("blue")  # Themes: blue (default), dark-blue, green
 
 ships_coors = []
 ships_count = 0
 
 misiles_coors = []
 misiles_count = 0
+
+didPlayerAWon = FALSE
+didPlayerBWon = FALSE
+
+scorePlayerA = 110
+scorePlayerB = 250
 
 class Frame:
     def __init__(self, master): 
@@ -16,6 +26,7 @@ class Frame:
         root.minsize(1000, 600)
         root.maxsize(1000, 600)
         root.resizable(0, 0)
+        root.eval('tk::PlaceWindow . center')
 
 
         # Putting background image
@@ -112,6 +123,35 @@ class Frame:
               print('MISILES\n')
               for misil in misiles_coors:
                   print(f' ({misil["x"]},{misil["y"]})')
+
+        def open_popup(player, score):
+
+            top = customtkinter.CTk()  # create CTk window like you do with the Tk window
+            # top.geometry("400x240")
+            # top= Toplevel(root)
+            top.resizable(0,0)
+            top.geometry("330x150")
+            top.title("Resultados de la Batalla")
+            x = root.winfo_x()
+            y = root.winfo_y() 
+            label = customtkinter.CTkLabel(top, text=(f'{player} Ganó\n Score: {score}'))
+            label.place(relx=0.5, rely=0.5, anchor=CENTER)
+
+
+            # label = customtkinter.CTkLabel(top, text=(f'{player} Ganó\n Score: {score}'), font=(
+            #     'Mistral 18 bold'), fg='#f00').place(relx=.5, rely=.5, anchor=CENTER)
+
+
+        def showWinner():
+            if (scorePlayerA > scorePlayerB):
+                  open_popup('Jugador A', scorePlayerA)
+            elif (scorePlayerA < scorePlayerB):
+                  open_popup('Jugador B', scorePlayerB)
+
+
+        # self.etiqueta = Label(root, text=" Click the Below Button to Open the Popup Window", font=('Helvetica 14 bold'))
+        # self.etiqueta.place(x=500, y=240)
+
 
 
       # Matriz de barcos
@@ -364,8 +404,11 @@ class Frame:
         self.DLabel.place(x=140, y=417)
 
 
-        self.PlayButton = Button(master, text="JUGAR", font=("Arial", 20), command=lambda: showShipsAndMisiles())
+        self.PlayButton = Button(master, text="Jugar", font=("Arial", 20), pady=10, command=lambda: showShipsAndMisiles(), state='disabled')
         self.PlayButton.place(x=800, y=116)
+        #Create a button in the main Window to open the popup
+        self.showWinner = Button(root, text= "Ver Resultados", font=("Arial", 20), pady=10, command= showWinner, state='normal')
+        self.showWinner.place(x=800, y=155)
               
           
         
