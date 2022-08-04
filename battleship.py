@@ -1,4 +1,3 @@
-from cgitb import enable
 import customtkinter
 from tkinter import *
 from PIL import ImageTk, Image, ImageOps
@@ -27,6 +26,9 @@ class Frame:
         self.scorePlayerB = 250
 
         self.batalla_count = 0
+
+        self.buttons_pressed = []
+
         # super().__init__()
         self.master = master
         root.geometry('1000x600')
@@ -65,6 +67,9 @@ class Frame:
 
         self.verResultadosBtn = Button(root, text= "Ver Resultados", font=("Arial", 20), pady=10, command=lambda: showWinner(), state='disabled')
         self.verResultadosBtn.place(x=800, y=155)
+
+        self.resetButton = Button(root, text= "Limpiar Posiciones", font=("Arial", 20), pady=10, command=lambda: resetAll())
+        self.resetButton.place(x=800, y=195)
 
         # def getScores():
         #     self.scorePlayerA = int(data.read())
@@ -125,7 +130,9 @@ class Frame:
                 addShipsCoordenates(x, y)
                 sendCoordenates(x,y)
                 incShipCount()
+                self.buttons_pressed.append(boton)
                 print(f'Cantidad de BARCOS  restantes {10-self.ships_count}\n')
+                print(f'Array de botones: {self.buttons_pressed}')
             else:
                 print('Error, no se puede agregar mas BARCOS.\n')
             if (isPlayButtonEnable()):
@@ -138,7 +145,9 @@ class Frame:
                   addMisilesCoordenates(x, y)
                   sendCoordenates(x, y)
                   incMisilesCount()
+                  self.buttons_pressed.append(boton)
                   print(f'Cantidad de MISILES restantes {10-self.misiles_count}\n')
+                  print(f'Array de botones: {self.buttons_pressed}')
             else:
                 print('Error, no se puede agregar mas MISILES.\n')
             if (isPlayButtonEnable()):
@@ -203,7 +212,7 @@ class Frame:
             top.title("¡¡Batalla!!")
             label = customtkinter.CTkLabel(top, text=(f'¡Batalla #{self.batalla_count} empezó!'))
             label.place(relx=0.5, rely=0.5, anchor=CENTER)
-            top.after(5000, top.destroy)
+            top.after(5000, top.destroy)      # Despues de 5s se cierra sola
 
 
         def showWinner():
@@ -211,6 +220,7 @@ class Frame:
                   open_popup('Jugador A', self.scorePlayerA)
             elif (self.scorePlayerA < self.scorePlayerB):
                   open_popup('Jugador B', self.scorePlayerB)
+
 
       # Matriz de barcos
 
@@ -460,6 +470,18 @@ class Frame:
         self.DLabel = Label(master, text="D",)
         self.DLabel.config(bg="white")
         self.DLabel.place(x=140, y=417)
+
+
+        def resetAll():
+            for button in self.buttons_pressed:
+                button['state'] = NORMAL
+            del self.buttons_pressed[:]
+            del self.ships_coors[:]
+            del self.misiles_coors[:]
+            self.ships_count = 0
+            self.misiles_count = 0
+            disableButton(self.PlayButton)
+            disableButton(self.verResultadosBtn)
 
               
             
