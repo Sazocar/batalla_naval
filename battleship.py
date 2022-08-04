@@ -1,26 +1,32 @@
+from cgitb import enable
 import customtkinter
 from tkinter import *
 from PIL import ImageTk, Image, ImageOps
 import serial, time
 
+# data = serial.Serial('COM3',baudrate='9600', bytesize=8)
 
 customtkinter.set_appearance_mode("System")  # Modes: system (default), light, dark
 customtkinter.set_default_color_theme("blue")  # Themes: blue (default), dark-blue, green
 
-ships_coors = []
-ships_count = 0
 
-misiles_coors = []
-misiles_count = 0
-
-didPlayerAWon = FALSE
-didPlayerBWon = FALSE
-
-scorePlayerA = 110
-scorePlayerB = 250
 
 class Frame:
     def __init__(self, master): 
+
+        self.ships_coors = []
+        self.ships_count = 0
+
+        self.misiles_coors = []
+        self.misiles_count = 0
+
+        self.didPlayerAWon = FALSE
+        self.didPlayerBWon = FALSE
+
+        self.scorePlayerA = 110
+        self.scorePlayerB = 250
+
+        self.batalla_count = 0
         # super().__init__()
         self.master = master
         root.geometry('1000x600')
@@ -53,14 +59,23 @@ class Frame:
         self.matrizMisilesLabel.config(bg="white")
         self.matrizMisilesLabel.place(x=220, y=456)
 
+        self.PlayButton = Button(master, text="Jugar", font=(
+            "Arial", 20), pady=10, command=lambda: showShipsAndMisiles(), state='disabled')
+        self.PlayButton.place(x=800, y=116)
+
+        # def getScores():
+        #     scorePlayerA = int(data.read())
+        #     scorePlayerA = scorePlayerA * 100
+        #     time.sleep(3)
+        #     scorePlayerB = int(data.read())
+        #     scorePlayerB = scorePlayerB * 100
 
         def incMisilesCount():
-            global misiles_count
-            misiles_count += 1
+            self.misiles_count += 1
 
         def incShipCount():
-            global ships_count
-            ships_count += 1
+            # global ships_count
+            self.ships_count += 1
 
 
         def make_labels():
@@ -77,66 +92,85 @@ class Frame:
 
 
         def addShipsCoordenates(x, y):
-            ships_coors.append({"x": x, "y": y})
+            self.ships_coors.append({"x": x, "y": y})
             print(f'BARCO posicionado en ({x},{y})')
 
         def addMisilesCoordenates(x, y):
-            misiles_coors.append({"x": x, "y": y})
+            self.misiles_coors.append({"x": x, "y": y})
             print(f'MISIL posicionado en ({x},{y})')
 
+        def incBattleCount():
+            self.batalla_count += 1
 
         def disableButton(boton):
             boton['state'] = DISABLED
 
 
+        def enableButton():
+            self.PlayButton['state'] = NORMAL
+
+
+        def isPlayButtonEnable():
+            if ((self.ships_count == 10) and (self.misiles_count == 10)):
+                return TRUE
+            else:
+                return FALSE
+
         def saveShip(boton, x, y):
-            if (ships_count < 10): 
+            if (self.ships_count < 10): 
                 disableButton(boton)
                 addShipsCoordenates(x, y)
                 sendCoordenates(x,y)
                 incShipCount()
-                print(f'Cantidad de BARCOS  restantes {10-ships_count}\n')
+                print(f'Cantidad de BARCOS  restantes {10-self.ships_count}\n')
             else:
                 print('Error, no se puede agregar mas BARCOS.\n')
+            if (isPlayButtonEnable()):
+                enableButton()
 
 
         def saveMisiles(boton, x, y):
-            if (misiles_count < 10):
+            if (self.misiles_count < 10):
                   disableButton(boton)
                   addMisilesCoordenates(x, y)
                   sendCoordenates(x, y)
                   incMisilesCount()
-                  print(f'Cantidad de MISILES restantes {10-misiles_count}\n')
+                  print(f'Cantidad de MISILES restantes {10-self.misiles_count}\n')
             else:
                 print('Error, no se puede agregar mas MISILES.\n')
+            if (isPlayButtonEnable()):
+                enableButton()
 
 
         def showShipsAndMisiles():
-            if (len(ships_coors) <= 0):
+            if (len(self.ships_coors) <= 0):
                 print('\n')
                 print('No hay barcos en posicion\n')
             else:
               print('BARCOS\n')
-              for ship in ships_coors:
+              for ship in self.ships_coors:
                   print(f' ({ship["x"]},{ship["y"]})')
-            if (len(misiles_coors) <= 0):
+            if (len(self.misiles_coors) <= 0):
                 print('\n')
                 print('No hay misiles en posicion\n')
             else:
               print('\n')
               print('MISILES\n')
-              for misil in misiles_coors:
+              for misil in self.misiles_coors:
                   print(f' ({misil["x"]},{misil["y"]})')
+            incBattleCount()
+            print(f' \n Batalla numero {self.batalla_count} realizada')
+
 
         def sendCoordenates(x,y):
-            data = serial.Serial('COM3',baudrate='9600', bytesize=8)
-            pos_x = bytes(x, 'utf-8')
-            pos_y = bytes(y, 'utf-8')
+            pos_x = bytes(str(x), 'utf-8')      # Si quiero que sean numeros, le quito str
+            pos_y = bytes(str(y), 'utf-8')      # pero me va a dar error de encode.
 
-            data.write(pos_x)
-            time.sleep(1)
-            data.write(pos_y)
+            # data.write(pos_x)
+            # time.sleep(1)
+            # data.write(pos_y)
             print(f'Posicion ({pos_x},{pos_y}) ENVIADA al Arduino')
+            
 
         def open_popup(player, score):
 
@@ -157,10 +191,10 @@ class Frame:
 
 
         def showWinner():
-            if (scorePlayerA > scorePlayerB):
-                  open_popup('Jugador A', scorePlayerA)
-            elif (scorePlayerA < scorePlayerB):
-                  open_popup('Jugador B', scorePlayerB)
+            if (self.scorePlayerA > self.scorePlayerB):
+                  open_popup('Jugador A', self.scorePlayerA)
+            elif (self.scorePlayerA < self.scorePlayerB):
+                  open_popup('Jugador B', self.scorePlayerB)
 
 
         # self.etiqueta = Label(root, text=" Click the Below Button to Open the Popup Window", font=('Helvetica 14 bold'))
@@ -418,17 +452,22 @@ class Frame:
         self.DLabel.place(x=140, y=417)
 
 
-        self.PlayButton = Button(master, text="Jugar", font=("Arial", 20), pady=10, command=lambda: showShipsAndMisiles(), state='disabled')
-        self.PlayButton.place(x=800, y=116)
         #Create a button in the main Window to open the popup
         self.showWinner = Button(root, text= "Ver Resultados", font=("Arial", 20), pady=10, command= showWinner, state='normal')
         self.showWinner.place(x=800, y=155)
               
-          
-        
+        # if (ships_count == 10 and misiles_count == 10):
+            
 
 
 
 root = Tk()
 MainFrame = Frame(root)
 root.mainloop()
+
+
+
+
+#  Esperando resultados, 5 segundos y quito el  toplevel 
+#  Recibo la cantidad de barcos y eso lo multiplico por 100
+#  Imprimo en el toplevel
