@@ -1,6 +1,8 @@
 import customtkinter
 from tkinter import *
 from PIL import ImageTk, Image, ImageOps
+import serial, time
+
 
 customtkinter.set_appearance_mode("System")  # Modes: system (default), light, dark
 customtkinter.set_default_color_theme("blue")  # Themes: blue (default), dark-blue, green
@@ -91,6 +93,7 @@ class Frame:
             if (ships_count < 10): 
                 disableButton(boton)
                 addShipsCoordenates(x, y)
+                sendCoordenates(x,y)
                 incShipCount()
                 print(f'Cantidad de BARCOS  restantes {10-ships_count}\n')
             else:
@@ -101,6 +104,7 @@ class Frame:
             if (misiles_count < 10):
                   disableButton(boton)
                   addMisilesCoordenates(x, y)
+                  sendCoordenates(x, y)
                   incMisilesCount()
                   print(f'Cantidad de MISILES restantes {10-misiles_count}\n')
             else:
@@ -123,6 +127,16 @@ class Frame:
               print('MISILES\n')
               for misil in misiles_coors:
                   print(f' ({misil["x"]},{misil["y"]})')
+
+        def sendCoordenates(x,y):
+            # data = serial.Serial('COM3',baudrate='9600', bytesize=8)
+            pos_x = bytes(x, 'utf-8')
+            pos_y = bytes(y, 'utf-8')
+
+            # data.write(pos_x)
+            time.sleep(1)
+            # data.write(pos_y)
+            print(f'Posicion ({pos_x},{pos_y}) ENVIADA al Arduino')
 
         def open_popup(player, score):
 
