@@ -63,12 +63,15 @@ class Frame:
             "Arial", 20), pady=10, command=lambda: showShipsAndMisiles(), state='disabled')
         self.PlayButton.place(x=800, y=116)
 
+        self.verResultadosBtn = Button(root, text= "Ver Resultados", font=("Arial", 20), pady=10, command=lambda: showWinner(), state='disabled')
+        self.verResultadosBtn.place(x=800, y=155)
+
         # def getScores():
-        #     scorePlayerA = int(data.read())
-        #     scorePlayerA = scorePlayerA * 100
+        #     self.scorePlayerA = int(data.read())
+        #     self.scorePlayerA = self.scorePlayerA * 100
         #     time.sleep(3)
-        #     scorePlayerB = int(data.read())
-        #     scorePlayerB = scorePlayerB * 100
+        #     self.scorePlayerB = int(data.read())
+        #     self.scorePlayerB = self.scorePlayerB * 100
 
         def incMisilesCount():
             self.misiles_count += 1
@@ -106,8 +109,8 @@ class Frame:
             boton['state'] = DISABLED
 
 
-        def enableButton():
-            self.PlayButton['state'] = NORMAL
+        def enableButton(button):
+            button['state'] = NORMAL
 
 
         def isPlayButtonEnable():
@@ -126,7 +129,7 @@ class Frame:
             else:
                 print('Error, no se puede agregar mas BARCOS.\n')
             if (isPlayButtonEnable()):
-                enableButton()
+                enableButton(self.PlayButton)
 
 
         def saveMisiles(boton, x, y):
@@ -139,7 +142,7 @@ class Frame:
             else:
                 print('Error, no se puede agregar mas MISILES.\n')
             if (isPlayButtonEnable()):
-                enableButton()
+                enableButton(self.PlayButton)
 
 
         def showShipsAndMisiles():
@@ -160,6 +163,9 @@ class Frame:
                   print(f' ({misil["x"]},{misil["y"]})')
             incBattleCount()
             print(f' \n Batalla numero {self.batalla_count} realizada')
+            enableButton(self.verResultadosBtn)
+            battleStarted()
+
 
 
         def sendCoordenates(x,y):
@@ -190,17 +196,21 @@ class Frame:
             #     'Mistral 18 bold'), fg='#f00').place(relx=.5, rely=.5, anchor=CENTER)
 
 
+        def battleStarted():
+            top = customtkinter.CTk()  # create CTk window like you do with the Tk window
+            top.resizable(0, 0)
+            top.geometry("230x150")
+            top.title("¡¡Batalla!!")
+            label = customtkinter.CTkLabel(top, text=(f'¡Batalla #{self.batalla_count} empezó!'))
+            label.place(relx=0.5, rely=0.5, anchor=CENTER)
+            top.after(5000, top.destroy)
+
+
         def showWinner():
             if (self.scorePlayerA > self.scorePlayerB):
                   open_popup('Jugador A', self.scorePlayerA)
             elif (self.scorePlayerA < self.scorePlayerB):
                   open_popup('Jugador B', self.scorePlayerB)
-
-
-        # self.etiqueta = Label(root, text=" Click the Below Button to Open the Popup Window", font=('Helvetica 14 bold'))
-        # self.etiqueta.place(x=500, y=240)
-
-
 
       # Matriz de barcos
 
@@ -451,12 +461,7 @@ class Frame:
         self.DLabel.config(bg="white")
         self.DLabel.place(x=140, y=417)
 
-
-        #Create a button in the main Window to open the popup
-        self.showWinner = Button(root, text= "Ver Resultados", font=("Arial", 20), pady=10, command= showWinner, state='normal')
-        self.showWinner.place(x=800, y=155)
               
-        # if (ships_count == 10 and misiles_count == 10):
             
 
 
