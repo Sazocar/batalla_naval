@@ -212,6 +212,10 @@ class Frame:
                 top, text=(f' Empate\n Jugador A: {self.scorePlayerA}\n Jugador B: {self.scorePlayerB}'))
             label.place(relx=0.5, rely=0.5, anchor=CENTER)
 
+            button = customtkinter.CTkButton(
+                top, text="Ok", command=lambda: exitTop(top))
+            button.pack(padx=20, pady=10)
+
         def exitGame(top):
             root.destroy()
             top.destroy()
@@ -220,13 +224,13 @@ class Frame:
         def exitTop(top):
             top.destroy()
 
-        def showWinner(player):
+        def showWinner(player, own_score, rival_score):
             top = customtkinter.CTk()  # create CTk window like you do with the Tk window
             top.resizable(0, 0)
             top.geometry("330x150")
             top.title("¡¡Ganador!!")
             label = customtkinter.CTkLabel(
-                top, text=(f' {player} Ganó la Batalla'))
+                top, text=(f' {player} Ganó la Batalla {own_score} - {rival_score}'))
             label.place(relx=0.5, rely=0.5, anchor=CENTER)
 
             button = customtkinter.CTkButton(top, text="Finalizar Juego", command=lambda: exitGame(top))
@@ -267,34 +271,27 @@ class Frame:
 
 
         def showResults():
-            if (self.batalla_count <= 3):
-                if (self.scorePlayerA > self.scorePlayerB):
-                  open_popup('Jugador A', self.scorePlayerA)
-                  self.PlayerA += 1
-                  print(f' Jugador A {self.PlayerA} - Jugador B {self.PlayerB}')
-                elif (self.scorePlayerA < self.scorePlayerB):
-                    open_popup('Jugador B', self.scorePlayerB)
-                    self.PlayerB += 1
-                    print(f' Jugador A {self.PlayerA} - Jugador B {self.PlayerB}')
-                elif (self.scorePlayerA == self.scorePlayerB):
-                    showDraw()
-                    print(f' Jugador A {self.PlayerA} - Jugador B {self.PlayerB}')
-            else: 
-                print('LA BATALLA HA TERMINADO')
-                if (self.PlayerA > self.PlayerB):
-                    print(f' Ganó el Jugador A {self.PlayerA} - {self.PlayerB}')
-                else:
-                    print(f' Ganó el Jugador B {self.PlayerB} - {self.PlayerA}')
+            if (self.scorePlayerA > self.scorePlayerB):
+                open_popup('Jugador A', self.scorePlayerA)
+                self.PlayerA += 1
+                print(f' Jugador A {self.PlayerA} - Jugador B {self.PlayerB}')
+            elif (self.scorePlayerA < self.scorePlayerB):
+                open_popup('Jugador B', self.scorePlayerB)
+                self.PlayerB += 1
+                print(f' Jugador A {self.PlayerA} - Jugador B {self.PlayerB}')
+            elif (self.scorePlayerA == self.scorePlayerB):
+                showDraw()
+                print(f' Jugador A {self.PlayerA} - Jugador B {self.PlayerB}')
             disableButton(self.PlayButton)
             disableButton(self.verResultadosBtn)
             if (self.PlayerA == 2):
                 print(f' Jugador A Ganó la partida')
-                showWinner('Jugador A')
+                showWinner('Jugador A', self.PlayerA, self.PlayerB)
                 resetGame()
                 resetCounts()
             elif (self.PlayerB == 2):
                 print(f' Jugador B Ganó la partida')
-                showWinner('Jugador B')
+                showWinner('Jugador B', self.PlayerB, self.PlayerA)
                 resetGame()
                 resetCounts()
 
