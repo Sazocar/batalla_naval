@@ -1,10 +1,12 @@
+from faulthandler import disable
 from unittest import case
 import customtkinter
 from tkinter import *
 from PIL import ImageTk, Image, ImageOps
 import serial, time
 
-# data = serial.Serial('COM3',baudrate='9600', bytesize=8)
+
+arduino = serial.Serial(port='/dev/cu.usbmodem14201', baudrate=9600, bytesize=serial.EIGHTBITS)
 
 customtkinter.set_appearance_mode("System")  # Modes: system (default), light, dark
 customtkinter.set_default_color_theme("blue")  # Themes: blue (default), dark-blue, green
@@ -25,6 +27,9 @@ class Frame:
 
         self.scorePlayerA = 110
         self.scorePlayerB = 250
+
+        self.PlayerA = 0
+        self.PlayerB = 0
 
         self.batalla_count = 0
 
@@ -66,36 +71,29 @@ class Frame:
             "Arial", 20), pady=10, command=lambda: showShipsAndMisiles(), state='disabled')
         self.PlayButton.place(x=800, y=116)
 
-        self.verResultadosBtn = Button(root, text= "Ver Resultados", font=("Arial", 20), pady=10, command=lambda: showWinner(), state='disabled')
+        self.verResultadosBtn = Button(root, text= "Ver Resultados", font=("Arial", 20), pady=10, command=lambda: showResults(), state='disabled')
         self.verResultadosBtn.place(x=800, y=155)
 
-        self.resetButton = Button(root, text= "Limpiar Posiciones", font=("Arial", 20), pady=10, command=lambda: resetAll())
+        self.resetButton = Button(root, text= "Limpiar Posiciones", font=("Arial", 20), pady=10, command=lambda: resetGame())
         self.resetButton.place(x=800, y=195)
 
-        # def getScores():
-        #     self.scorePlayerA = int(data.read())
-        #     self.scorePlayerA = self.scorePlayerA * 100
-        #     time.sleep(3)
-        #     self.scorePlayerB = int(data.read())
-        #     self.scorePlayerB = self.scorePlayerB * 100
 
-        # def readFromArduino():
-        #     char = ''
-        #     count = 0
-        #     score = 0
-        #     while (data.isAvailable()):
-        #         while (count < 2):
-        #             char = data.read()
-        #             if (char == 'F'):
-        #                 score = 10
-        #             else:
-        #                 score = int(char)
-        #             if (count == 0):
-        #                 self.scorePlayerA = score
-        #             elif (count == 1):
-        #                 self.scorePlayerB = score
-        #             count += 1
+        def readFromArduino():
+            char = ''
+            score = 0
+            char = arduino.readline()
+            score = int(char)
+            if (score < 10):
+                self.scorePlayerA = 0 
+                self.scorePlayerB = score * 100
+            else:
+                char = str(score)
+                print(char)
+                self.scorePlayerA = int(char[0]) * 100
+                self.scorePlayerB = int(char[1]) * 100
 
+            print(f' Score Jugador A {self.scorePlayerA}')
+            print(f' Score Jugador B {self.scorePlayerB}')
 
 
         def incMisilesCount():
@@ -167,7 +165,7 @@ class Frame:
                   incMisilesCount()
                   self.buttons_pressed.append(boton)
                   print(f'Cantidad de MISILES restantes {10-self.misiles_count}\n')
-                  print(f'Array de botones: {self.buttons_pressed}')
+                #   print(f'Array de botones: {self.buttons_pressed}')
             else:
                 print('Error, no se puede agregar mas MISILES.\n')
             if (isPlayButtonEnable()):
@@ -194,29 +192,44 @@ class Frame:
             print(f' \n Batalla numero {self.batalla_count} realizada')
             enableButton(self.verResultadosBtn)
             battleStarted()
-            # readFromArduino()
+            readFromArduino() 
 
 
         def sendCoordenates(x,y):
             pos_x = bytes(str(x), 'utf-8')      # Si quiero que sean numeros, le quito str
             pos_y = bytes(str(y), 'utf-8')      # pero me va a dar error de encode.
-
-            # data.write(pos_x)
-            # time.sleep(1)
-            # data.write(pos_y)
+            arduino.write(pos_x)
+            arduino.write(pos_y)
             print(f'Posicion ({pos_x},{pos_y}) ENVIADA al Arduino')
             
+
+        def showDraw():
+            top = customtkinter.CTk()  # create CTk window like you do with the Tk window
+            top.resizable(0, 0)
+            top.geometry("330x150")
+            top.title("Resultados de la Batalla")
+            label = customtkinter.CTkLabel(
+                top, text=(f' Empate\n Jugador A: {self.scorePlayerA}\n Jugador B: {self.scorePlayerB}'))
+            label.place(relx=0.5, rely=0.5, anchor=CENTER)
+
+
+
+        def showWinner(player):
+            top = customtkinter.CTk()  # create CTk window like you do with the Tk window
+            top.resizable(0, 0)
+            top.geometry("330x150")
+            top.title("¡¡Ganador!!")
+            label = customtkinter.CTkLabel(
+                top, text=(f' {player} Ganó la Batalla'))
+            label.place(relx=0.5, rely=0.5, anchor=CENTER)
+
 
         def open_popup(player, score):
 
             top = customtkinter.CTk()  # create CTk window like you do with the Tk window
-            # top.geometry("400x240")
-            # top= Toplevel(root)
             top.resizable(0,0)
             top.geometry("330x150")
             top.title("Resultados de la Batalla")
-            x = root.winfo_x()
-            y = root.winfo_y() 
             label = customtkinter.CTkLabel(top, text=(f'{player} Ganó\n Score: {score}'))
             label.place(relx=0.5, rely=0.5, anchor=CENTER)
 
@@ -232,14 +245,46 @@ class Frame:
             top.title("¡¡Batalla!!")
             label = customtkinter.CTkLabel(top, text=(f'¡Batalla #{self.batalla_count} empezó!'))
             label.place(relx=0.5, rely=0.5, anchor=CENTER)
-            top.after(5000, top.destroy)      # Despues de 5s se cierra sola
+            # top.after(5000, top.destroy)      # Despues de 5s se cierra sola
 
 
-        def showWinner():
-            if (self.scorePlayerA > self.scorePlayerB):
+        def resetCounts():
+            self.batalla_count = 0
+            self.PlayerA = 0
+            self.PlayerB = 0
+
+
+        def showResults():
+            if (self.batalla_count <= 3):
+                if (self.scorePlayerA > self.scorePlayerB):
                   open_popup('Jugador A', self.scorePlayerA)
-            elif (self.scorePlayerA < self.scorePlayerB):
-                  open_popup('Jugador B', self.scorePlayerB)
+                  self.PlayerA += 1
+                  print(f' Jugador A {self.PlayerA} - Jugador B {self.PlayerB}')
+                elif (self.scorePlayerA < self.scorePlayerB):
+                    open_popup('Jugador B', self.scorePlayerB)
+                    self.PlayerB += 1
+                    print(f' Jugador A {self.PlayerA} - Jugador B {self.PlayerB}')
+                elif (self.scorePlayerA == self.scorePlayerB):
+                    showDraw()
+                    print(f' Jugador A {self.PlayerA} - Jugador B {self.PlayerB}')
+            else: 
+                print('LA BATALLA HA TERMINADO')
+                if (self.PlayerA > self.PlayerB):
+                    print(f' Ganó el Jugador A {self.PlayerA} - {self.PlayerB}')
+                else:
+                    print(f' Ganó el Jugador B {self.PlayerB} - {self.PlayerA}')
+            disableButton(self.PlayButton)
+            disableButton(self.verResultadosBtn)
+            if (self.PlayerA == 2):
+                print(f' Jugador 2 Ganó la partida')
+                showWinner('Jugador A')
+                resetGame()
+                resetCounts()
+            elif (self.PlayerB == 2):
+                print(f' Jugador 2 Ganó la partida')
+                showWinner('Jugador B')
+                resetGame()
+                resetCounts()
 
 
       # Matriz de barcos
@@ -492,7 +537,7 @@ class Frame:
         self.DLabel.place(x=140, y=417)
 
 
-        def resetAll():
+        def resetGame():
             for button in self.buttons_pressed:
                 button['state'] = NORMAL
             del self.buttons_pressed[:]
@@ -511,6 +556,10 @@ class Frame:
 root = Tk()
 MainFrame = Frame(root)
 root.mainloop()
+
+# while (arduino.isOpen()):
+#     while (arduino.isAvailable()):
+#         if (arduino.read() == b'1'):
 
 
 
