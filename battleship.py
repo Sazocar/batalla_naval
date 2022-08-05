@@ -1,3 +1,4 @@
+from unittest import case
 import customtkinter
 from tkinter import *
 from PIL import ImageTk, Image, ImageOps
@@ -78,6 +79,25 @@ class Frame:
         #     self.scorePlayerB = int(data.read())
         #     self.scorePlayerB = self.scorePlayerB * 100
 
+        # def readFromArduino():
+        #     char = ''
+        #     count = 0
+        #     score = 0
+        #     while (data.isAvailable()):
+        #         while (count < 2):
+        #             char = data.read()
+        #             if (char == 'F'):
+        #                 score = 10
+        #             else:
+        #                 score = int(char)
+        #             if (count == 0):
+        #                 self.scorePlayerA = score
+        #             elif (count == 1):
+        #                 self.scorePlayerB = score
+        #             count += 1
+
+
+
         def incMisilesCount():
             self.misiles_count += 1
 
@@ -132,7 +152,7 @@ class Frame:
                 incShipCount()
                 self.buttons_pressed.append(boton)
                 print(f'Cantidad de BARCOS  restantes {10-self.ships_count}\n')
-                print(f'Array de botones: {self.buttons_pressed}')
+                # print(f'Array de botones: {self.buttons_pressed}')
             else:
                 print('Error, no se puede agregar mas BARCOS.\n')
             if (isPlayButtonEnable()):
@@ -174,7 +194,7 @@ class Frame:
             print(f' \n Batalla numero {self.batalla_count} realizada')
             enableButton(self.verResultadosBtn)
             battleStarted()
-
+            # readFromArduino()
 
 
         def sendCoordenates(x,y):
