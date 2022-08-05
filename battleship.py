@@ -196,8 +196,8 @@ class Frame:
 
 
         def sendCoordenates(x,y):
-            pos_x = bytes(str(x), 'utf-8')      # Si quiero que sean numeros, le quito str
-            pos_y = bytes(str(y), 'utf-8')      # pero me va a dar error de encode.
+            pos_x = bytes(str(x-1), 'utf-8')      # Si quiero que sean numeros, le quito str
+            pos_y = bytes(str(y-1), 'utf-8')      # pero me va a dar error de encode.
             arduino.write(pos_x)
             arduino.write(pos_y)
             print(f'Posicion ({pos_x},{pos_y}) ENVIADA al Arduino')
@@ -212,7 +212,13 @@ class Frame:
                 top, text=(f' Empate\n Jugador A: {self.scorePlayerA}\n Jugador B: {self.scorePlayerB}'))
             label.place(relx=0.5, rely=0.5, anchor=CENTER)
 
+        def exitGame(top):
+            root.destroy()
+            top.destroy()
 
+
+        def exitTop(top):
+            top.destroy()
 
         def showWinner(player):
             top = customtkinter.CTk()  # create CTk window like you do with the Tk window
@@ -222,6 +228,10 @@ class Frame:
             label = customtkinter.CTkLabel(
                 top, text=(f' {player} Ganó la Batalla'))
             label.place(relx=0.5, rely=0.5, anchor=CENTER)
+
+            button = customtkinter.CTkButton(top, text="Finalizar Juego", command=lambda: exitGame(top))
+            button.pack(padx=20, pady=10)
+
 
 
         def open_popup(player, score):
@@ -233,9 +243,9 @@ class Frame:
             label = customtkinter.CTkLabel(top, text=(f'{player} Ganó\n Score: {score}'))
             label.place(relx=0.5, rely=0.5, anchor=CENTER)
 
-
-            # label = customtkinter.CTkLabel(top, text=(f'{player} Ganó\n Score: {score}'), font=(
-            #     'Mistral 18 bold'), fg='#f00').place(relx=.5, rely=.5, anchor=CENTER)
+            button = customtkinter.CTkButton(
+                top, text="Ok", command=lambda: exitTop(top))
+            button.pack(padx=20, pady=10)
 
 
         def battleStarted():
@@ -246,6 +256,9 @@ class Frame:
             label = customtkinter.CTkLabel(top, text=(f'¡Batalla #{self.batalla_count} empezó!'))
             label.place(relx=0.5, rely=0.5, anchor=CENTER)
             # top.after(5000, top.destroy)      # Despues de 5s se cierra sola
+
+            button = customtkinter.CTkButton(top, text="Ok", command=lambda: exitTop(top))
+            button.pack(padx=20, pady=10)
 
 
         def resetCounts():
@@ -276,12 +289,12 @@ class Frame:
             disableButton(self.PlayButton)
             disableButton(self.verResultadosBtn)
             if (self.PlayerA == 2):
-                print(f' Jugador 2 Ganó la partida')
+                print(f' Jugador A Ganó la partida')
                 showWinner('Jugador A')
                 resetGame()
                 resetCounts()
             elif (self.PlayerB == 2):
-                print(f' Jugador 2 Ganó la partida')
+                print(f' Jugador B Ganó la partida')
                 showWinner('Jugador B')
                 resetGame()
                 resetCounts()
