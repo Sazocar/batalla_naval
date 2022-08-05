@@ -255,7 +255,6 @@ class Frame:
             top.title("¡¡Batalla!!")
             label = customtkinter.CTkLabel(top, text=(f'¡Batalla #{self.batalla_count} empezó!'))
             label.place(relx=0.5, rely=0.5, anchor=CENTER)
-            # top.after(5000, top.destroy)      # Despues de 5s se cierra sola
 
             button = customtkinter.CTkButton(top, text="Ok", command=lambda: exitTop(top))
             button.pack(padx=20, pady=10)
@@ -569,14 +568,3 @@ class Frame:
 root = Tk()
 MainFrame = Frame(root)
 root.mainloop()
-
-# while (arduino.isOpen()):
-#     while (arduino.isAvailable()):
-#         if (arduino.read() == b'1'):
-
-
-
-
-#  Esperando resultados, 5 segundos y quito el  toplevel 
-#  Recibo la cantidad de barcos y eso lo multiplico por 100
-#  Imprimo en el toplevel
